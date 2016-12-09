@@ -10,8 +10,8 @@
  */
 function bubbleChart() {
   // Constants for sizing
-  var width = 940;
-  var height = 600;
+  var width = 1440;
+  var height = 900;
 
   // tooltip for mouseover functionality
   var tooltip = floatingTooltip('gates_tooltip', 240);
@@ -70,7 +70,7 @@ function bubbleChart() {
   // Nice looking colors - no reason to buck the trend
   var fillColor = d3.scale.ordinal()
     .domain(['low', 'medium', 'high'])
-    .range(['#d84b2a', '#beccae', '#7aa25c']);
+    .range(['#005291', '#2881C7', '#5CB8FF']);
 
   // Sizes bubbles based on their area instead of raw radius
   var radiusScale = d3.scale.pow()
@@ -156,9 +156,10 @@ function bubbleChart() {
       .attr('r', 0)
       .attr('fill', function (d) { return fillColor(d.group); })
       .attr('stroke', function (d) { return d3.rgb(fillColor(d.group)).darker(); })
-      .attr('stroke-width', 2)
-      .on('mouseover', showDetail)
-      .on('mouseout', hideDetail);
+      .attr('stroke-width', 1)
+      // .on('mouseover', showDetail)
+      // .on('mouseout', hideDetail)
+      .on("click" , nodesAsButtons);
 
     // Fancy transition to make bubbles appear, ending with the
     // correct radius
@@ -177,7 +178,7 @@ function bubbleChart() {
    * center of the visualization.
    */
   function groupBubbles() {
-    hideYears();
+    // hideYears();
 
     force.on('tick', function (e) {
       bubbles.each(moveToCenter(e.alpha))
@@ -216,7 +217,7 @@ function bubbleChart() {
    * yearCenter of their data's year.
    */
   function splitBubbles() {
-    showYears();
+    // showYears();
 
     force.on('tick', function (e) {
       bubbles.each(moveToYears(e.alpha))
@@ -314,7 +315,7 @@ function bubbleChart() {
    * displayName is expected to be a string and either 'year' or 'all'.
    */
   chart.toggleDisplay = function (displayName) {
-    if (displayName === 'year') {
+    if (displayName === true) {
       splitBubbles();
     } else {
       groupBubbles();
@@ -348,25 +349,34 @@ function display(error, data) {
 /*
  * Sets up the layout buttons to allow for toggling between view modes.
  */
-function setupButtons() {
-  d3.select('#toolbar')
-    .selectAll('.button')
-    .on('click', function () {
-      // Remove active class from all buttons
-      d3.selectAll('.button').classed('active', false);
-      // Find the button just clicked
-      var button = d3.select(this);
+// function setupButtons() {
+//   d3.select('#toolbar')
+//     .selectAll('.button')
+//     .on('click', function () {
+//       // Remove active class from all buttons
+//       d3.selectAll('.button').classed('active', false);
+//       // Find the button just clicked
+//       var button = d3.select(this);
+//
+//       // Set it as the active button
+//       button.classed('active', true);
+//
+//       // Get the id of the button
+//       var buttonId = button.attr('id');
+//
+//       // Toggle the bubble chart based on
+//       // the currently clicked button.
+//       myBubbleChart.toggleDisplay(buttonId);
+//     });
+// }
+var buttonId = false;
+function nodesAsButtons() {
+            console.log("test");
 
-      // Set it as the active button
-      button.classed('active', true);
-
-      // Get the id of the button
-      var buttonId = button.attr('id');
-
-      // Toggle the bubble chart based on
-      // the currently clicked button.
-      myBubbleChart.toggleDisplay(buttonId);
-    });
+            buttonId = !buttonId;
+            // Toggle the bubble chart based on
+            // the currently clicked button.
+            myBubbleChart.toggleDisplay(buttonId);
 }
 
 /*
@@ -390,4 +400,5 @@ function addCommas(nStr) {
 d3.csv('data/gates_money.csv', display);
 
 // setup the buttons.
-setupButtons();
+// setupButtons();
+nodesAsButtons();
