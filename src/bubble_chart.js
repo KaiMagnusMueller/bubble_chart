@@ -93,7 +93,7 @@ function bubbleChart() {
         // working with data.
         var myNodes = rawData.map(function (d) {
             return {
-                id: d.numericcode,
+                id: d.Location,
                 radius: radiusScale(+d.Year1950),
                 value: d.Year1950,
                 name: d.Location,
@@ -148,8 +148,9 @@ function bubbleChart() {
         // Initially, their radius (r attribute) will be 0.
         bubbles.enter().append('circle')
             .classed('bubble', true)
+            .attr("id", function (d) { return d.id; })
             .attr('r', 0)
-            // .attr('fill', function (d) { return fillColor(d.group); })
+            .attr('fill', fillColor)
             // .attr('stroke', function (d) { return d3.rgb(fillColor(d.group)).darker(); })
             .attr('stroke-width', 1)
             // .on('mouseover', showDetail)
@@ -337,6 +338,7 @@ function display(error, data) {
     if (error) {
         console.log(error);
     }
+    console.log(data);
 
     myBubbleChart('#vis', data);
 }
@@ -392,7 +394,7 @@ function addCommas(nStr) {
 }
 
 // Load the data.
-d3.csv('data/WorldPop_Sortiert.csv', display);
+d3.csv('data/WorldPop_Sortiert_Klein.csv', display);
 
 // setup the buttons.
 // setupButtons();
